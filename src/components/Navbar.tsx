@@ -14,20 +14,45 @@ const Navbar = () => {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['hero', 'about', 'experience', 'skills', 'projects', 'contact'];
-      const scrollPosition = window.scrollY + 100;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i]);
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
-          break;
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const navbarHeight = 64; // Height of the navbar
+      
+      // Find the section that's most visible in the viewport
+      let currentSection = 'hero'; // Default to hero
+      let maxVisibility = 0;
+      
+      for (const sectionId of sections) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top + scrollPosition;
+          const sectionHeight = rect.height;
+          
+          // Calculate how much of the section is visible in the viewport
+          const viewportTop = scrollPosition + navbarHeight;
+          const viewportBottom = scrollPosition + windowHeight;
+          
+          const visibleTop = Math.max(sectionTop, viewportTop);
+          const visibleBottom = Math.min(sectionTop + sectionHeight, viewportBottom);
+          const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+          const visibility = visibleHeight / windowHeight;
+          
+          // If this section is more visible than the current best, or
+          // if we're at the top and this is the hero section
+          if (visibility > maxVisibility || (scrollPosition < 100 && sectionId === 'hero')) {
+            maxVisibility = visibility;
+            currentSection = sectionId;
+          }
         }
       }
+      
+      setActiveSection(currentSection);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -36,6 +61,7 @@ const Navbar = () => {
   }, []);
 
   const navigation = [
+    { name: 'Home', href: '#hero', id: 'hero' },
     { name: 'About', href: '#about', id: 'about' },
     { name: 'Experience', href: '#experience', id: 'experience' },
     { name: 'Skills', href: '#skills', id: 'skills' },
@@ -68,13 +94,16 @@ const Navbar = () => {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className={`transition-colors duration-200 ${
+                className={`transition-all duration-500 ease-in-out relative transform ${
                   activeSection === item.id
-                    ? 'text-primary font-medium'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-primary font-semibold nav-active'
+                    : 'text-muted-foreground hover:text-foreground hover:scale-105'
                 }`}
               >
                 {item.name}
+                {activeSection === item.id && (
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full nav-indicator"></div>
+                )}
               </button>
             ))}
           </div>
@@ -99,7 +128,9 @@ const Navbar = () => {
             </a>
             {mounted && (
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={() => {
+                  setTheme(theme === 'dark' ? 'light' : 'dark');
+                }}
                 className="text-muted-foreground hover:text-foreground transition-colors duration-200"
               >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -111,7 +142,9 @@ const Navbar = () => {
           <div className="md:hidden flex items-center space-x-2">
             {mounted && (
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={() => {
+                  setTheme(theme === 'dark' ? 'light' : 'dark');
+                }}
                 className="text-muted-foreground hover:text-foreground transition-colors duration-200"
               >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -135,13 +168,16 @@ const Navbar = () => {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className={`block w-full text-left px-3 py-2 transition-colors duration-200 ${
+                className={`block w-full text-left px-3 py-2 transition-all duration-500 ease-in-out relative transform ${
                   activeSection === item.id
-                    ? 'text-primary font-medium'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-primary font-semibold bg-primary/10 rounded-md scale-105'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md hover:scale-102'
                 }`}
               >
                 {item.name}
+                {activeSection === item.id && (
+                  <div className="absolute left-1 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-primary rounded-full nav-indicator"></div>
+                )}
               </button>
             ))}
             <div className="flex items-center space-x-4 px-3 py-2">
