@@ -6,6 +6,7 @@ export const personalInfo = {
   phone: "+919748211555",
   location: "Bengaluru, Karnataka",
   github: "https://github.com/kundan621",
+  linkedin: "https://linkedin.com/in/kundan-kumar-5b7391108",
   leetcode: "https://leetcode.com/kundan621",
   youtube: "CSEBuddy",
   avatar: "/images/Kundan-Avatar.png", // Your actual photo

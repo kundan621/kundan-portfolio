@@ -14,7 +14,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 pt-16">
+    <section id="hero" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center space-y-8">
           {/* Avatar */}

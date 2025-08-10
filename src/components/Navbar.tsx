@@ -9,23 +9,38 @@ import { personalInfo } from '@/data/personal';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const navigation = [
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['hero', 'about', 'experience', 'skills', 'projects', 'contact'];
+      const scrollPosition = window.scrollY + 100;
 
-  const additionalPages = [
-    { name: 'All Projects', href: '/projects' },
-    { name: 'Resume', href: '/resume' },
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i]);
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(sections[i]);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Call once to set initial state
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navigation = [
+    { name: 'About', href: '#about', id: 'about' },
+    { name: 'Experience', href: '#experience', id: 'experience' },
+    { name: 'Skills', href: '#skills', id: 'skills' },
+    { name: 'Projects', href: '#projects', id: 'projects' },
+    { name: 'Contact', href: '#contact', id: 'contact' },
   ];
 
   const scrollToSection = (href: string) => {
@@ -53,19 +68,14 @@ const Navbar = () => {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className={`transition-colors duration-200 ${
+                  activeSection === item.id
+                    ? 'text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
               >
                 {item.name}
               </button>
-            ))}
-            {additionalPages.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-              >
-                {item.name}
-              </Link>
             ))}
           </div>
 
@@ -80,7 +90,7 @@ const Navbar = () => {
               <Github size={20} />
             </a>
             <a
-              href={`https://linkedin.com/in/${personalInfo.email.split('@')[0]}`}
+              href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -125,20 +135,14 @@ const Navbar = () => {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left px-3 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className={`block w-full text-left px-3 py-2 transition-colors duration-200 ${
+                  activeSection === item.id
+                    ? 'text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
               >
                 {item.name}
               </button>
-            ))}
-            {additionalPages.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className="block w-full text-left px-3 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
-              >
-                {item.name}
-              </Link>
             ))}
             <div className="flex items-center space-x-4 px-3 py-2">
               <a
@@ -150,7 +154,7 @@ const Navbar = () => {
                 <Github size={20} />
               </a>
               <a
-                href={`https://linkedin.com/in/${personalInfo.email.split('@')[0]}`}
+                href={personalInfo.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors duration-200"
