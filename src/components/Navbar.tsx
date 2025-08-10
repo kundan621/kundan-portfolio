@@ -23,10 +23,17 @@ const Navbar = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
+  const additionalPages = [
+    { name: 'All Projects', href: '/projects' },
+    { name: 'Resume', href: '/resume' },
+  ];
+
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (href.startsWith('#')) {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setIsOpen(false);
   };
@@ -50,6 +57,15 @@ const Navbar = () => {
               >
                 {item.name}
               </button>
+            ))}
+            {additionalPages.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+              >
+                {item.name}
+              </Link>
             ))}
           </div>
 
@@ -113,6 +129,16 @@ const Navbar = () => {
               >
                 {item.name}
               </button>
+            ))}
+            {additionalPages.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className="block w-full text-left px-3 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+              >
+                {item.name}
+              </Link>
             ))}
             <div className="flex items-center space-x-4 px-3 py-2">
               <a

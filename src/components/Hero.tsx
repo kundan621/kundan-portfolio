@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ArrowDown, Download, Github, Linkedin, Mail, MapPin, Phone, Youtube } from 'lucide-react';
+import Image from 'next/image';
 import { personalInfo } from '@/data/personal';
 
 const Hero = () => {
@@ -24,10 +25,23 @@ const Hero = () => {
             className="relative mx-auto w-32 h-32 md:w-40 md:h-40"
           >
             <div className="w-full h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-1">
-              <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
-                <span className="text-4xl md:text-5xl font-bold text-primary">
-                  {personalInfo.name.split(' ').map(name => name[0]).join('')}
-                </span>
+              <div className="w-full h-full rounded-full bg-background overflow-hidden">
+                {personalInfo.avatar ? (
+                  <Image
+                    src={personalInfo.avatar}
+                    alt={personalInfo.name}
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover rounded-full"
+                    priority
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-4xl md:text-5xl font-bold text-primary">
+                      {personalInfo.name.split(' ').map(name => name[0]).join('')}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>

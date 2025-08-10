@@ -8,8 +8,8 @@ export const personalInfo = {
   github: "https://github.com/kundan621",
   leetcode: "https://leetcode.com/kundan621",
   youtube: "CSEBuddy",
-  avatar: "/images/avatar.jpg", // You can add your photo later
-  resume: "/resume.pdf" // You can add your resume PDF later
+  avatar: "/images/Kundan-Avatar.png", // Your actual photo
+  resume: "/Kundan_Kumar_Resume.pdf" // Update this to match your actual file name
 };
 
 export const about = {
